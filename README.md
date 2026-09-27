@@ -39,6 +39,16 @@ El desarrollo nativo de iOS (Ejercicios 2 y 3) se hizo **sin una Mac física**, 
 
 Esta configuración es funcional pero tiene limitaciones de hardware/servicios frente a una Mac real, que se documentan en el Ejercicio 3 porque ahí es donde se notan (cámara, micrófono, GPU).
 
+### Evidencia
+
+| Especificaciones de la PC usada | Instalación de WSL2 |
+|---|---|
+| ![Specs de la PC](capturas/ejercicio1/01-specs-pc.png) | ![Instalación de WSL2](capturas/ejercicio1/02-wsl-install.png) |
+
+| macOS Ventura en QEMU (docker-osx) | Proyecto de prueba SwiftUI en el simulador |
+|---|---|
+| ![macOS en QEMU](capturas/ejercicio1/03-macos-vm-appleid.png) | ![Hello world en simulador](capturas/ejercicio1/04-helloworld-simulador.png) |
+
 ---
 
 ## Ejercicio 2 — Gestor de Archivos
@@ -56,6 +66,16 @@ Gestor de archivos con sandbox propio de la app (`Documents/Inbox`), con las sig
 - Temas institucionales **Guinda (IPN)** y **Azul (ESCOM)**, adaptados a modo claro/oscuro.
 
 **Archivos principales:** `FileBrowserView`, `FileBrowserViewModel`, `FileSystemService`, `FileSystemModels`, `FileViewers`, `FileRowView`, `DestinationPickerView`, `PersistenceStores`, `SystemWrappers`, `AppTheme`, `RootTabView`, `GestorArchivosApp`.
+
+### Evidencia
+
+| Proyecto en Xcode | Build settings (iOS 16.4) |
+|---|---|
+| ![Proyecto en Xcode](capturas/ejercicio2/01-xcode-proyecto.png) | ![Build settings](capturas/ejercicio2/02-build-settings.png) |
+
+| Pantalla principal (Documents / Inbox / Temporal) | Favoritos |
+|---|---|
+| ![Gestor de Archivos - inicio](capturas/ejercicio2/03-gestor-home.png) | ![Favoritos](capturas/ejercicio2/04-favoritos.png) |
 
 ### Cómo ejecutarlo
 1. Abrir `Ejercicio2_GestorArchivos/` en Xcode (14.0+).
@@ -104,6 +124,22 @@ Al no correr en una Mac física, el simulador dentro de la VM carece de ciertos 
 | Sin micrófono real en la VM | La grabación no captura audio | Si no hay hardware disponible, se genera un audio de respaldo (silencioso) con la duración grabada, para que guardar/reproducir sigan siendo funcionales de extremo a extremo; también existe la opción de importar un archivo de audio existente |
 | Sin aceleración GPU/Metal | Los filtros de Core Image no se aplicaban | Se forzó el renderizado por software (`CIContext(options: [.useSoftwareRenderer: true])`) |
 | Servicio de conversión de Fotos inestable | Alguna foto en particular podía fallar al elegirla de la fototeca | Manejo de error explícito: si una foto falla, se avisa en pantalla para intentar con otra, en vez de que la app se cierre |
+
+### Evidencia
+
+| Selección desde la fototeca (cámara) | Grabación de audio en curso |
+|---|---|
+| ![Fototeca](capturas/ejercicio3/01-camara-fototeca.png) | ![Grabando audio](capturas/ejercicio3/02-audio-grabando.png) |
+
+| Guardar grabación (16 s) | Reproducción (duración 00:16) |
+|---|---|
+| ![Guardar audio](capturas/ejercicio3/03-audio-guardar.png) | ![Reproducción de audio](capturas/ejercicio3/04-audio-reproduccion.png) |
+
+Durante el desarrollo también se depuraron errores de compilación reales, documentados como evidencia del proceso:
+
+| Error de Core Data (modelo faltante) | Error de destino "My Mac" en vez de simulador |
+|---|---|
+| ![Error Core Data](capturas/ejercicio3/05-debug-coredata.png) | ![Error destino My Mac](capturas/ejercicio3/06-debug-destino.png) |
 
 ---
 
