@@ -1,0 +1,36 @@
+name: gestor_archivos
+description: "Práctica 3 - Ejercicio 4: Gestor de Archivos multiplataforma (Flutter). IPN - ESCOM."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.10.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_localizations:
+    sdk: flutter
+  # Gestor de estado (equivalente a ObservableObject / @EnvironmentObject de SwiftUI)
+  provider: ^6.1.2
+  # Persistencia local (equivalente a UserDefaults del Ejercicio 2)
+  hive: ^2.2.3
+  # Carpetas del sandbox de la app (Documents, tmp, Application Support)
+  path_provider: ^2.1.4
+  path: ^1.8.3
+  # Importar archivos (equivalente a UIDocumentPickerViewController)
+  file_picker: ^13.1.0
+  # Vista previa con el visor nativo del sistema (equivalente a QLPreviewController)
+  open_filex: ^4.5.0
+  # Compartir / exportar (equivalente a UIActivityViewController)
+  share_plus: ^13.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/muestras/
