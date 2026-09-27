@@ -9,7 +9,7 @@ La práctica consta de 5 ejercicios. Este repositorio reúne el trabajo de ambos
 | 1 | Instalación y configuración del entorno de desarrollo nativo (iOS) | macOS / Xcode | Julio Olascoaga |
 | 2 | Gestor de archivos nativo | iOS (Swift/SwiftUI) | Julio Olascoaga |
 | 3 | Aplicación de cámara y micrófono | iOS (Swift/SwiftUI) | Julio Olascoaga |
-| 4 | Aplicación multiplataforma | Flutter | *(en progreso — completar)* |
+| 4 | Aplicación multiplataforma — Gestor de archivos | Flutter (Android / iOS) | Diego Hernández |
 | 5 | Aplicación multiplataforma | Kotlin Multiplatform | *(en progreso — completar)* |
 
 > Los nombres del equipo en la tabla son un punto de partida — ajusta o completa según corresponda.
@@ -144,7 +144,70 @@ Durante el desarrollo también se depuraron errores de compilación reales, docu
 ---
 
 ## Ejercicio 4 — Flutter
-*(pendiente — completar por el equipo)*
+
+**Carpeta:** `Ejercicio4_Flutter/` · Dart + Flutter · Provider (gestor de estado) + Hive (persistencia local)
+
+Versión multiplataforma (Android / iOS) del **Gestor de Archivos** del Ejercicio 2, con la misma lógica de negocio y la misma estructura de pestañas: **Archivos**, **Favoritos**, **Recientes**, **Ajustes**.
+
+- Explorador del sandbox de la app (`Documents`, `Inbox`, `Temporal (tmp)`) con navegación por carpetas, búsqueda y ordenamiento (nombre, fecha, tamaño).
+- Gestión de archivos: crear carpetas, renombrar, duplicar, copiar y mover (sin sobrescribir: agrega "(1)", "(2)"…), eliminar con confirmación.
+- Importar archivos con el selector del sistema (`file_picker`) y compartir/exportar (`share_plus`).
+- Visores: imágenes con zoom (pellizco o botones), arrastre y rotación; texto con edición y guardado; el resto de tipos se abre con el visor nativo del sistema (`open_filex`, equivalente a `QLPreviewController`).
+- Íconos por tipo de archivo y miniaturas cacheadas (`ResizeImage` + `ImageCache` de Flutter, equivalente al `NSCache` del Ejercicio 2).
+- Gestos: deslizar a la derecha para favorito, a la izquierda para eliminar, mantener presionado para el menú contextual, jalar para actualizar.
+- Persistencia con **Hive**: tema, modo claro/oscuro, criterio de orden, última carpeta visitada, favoritos y recientes (máx. 25).
+- Temas institucionales **Guinda (IPN)** y **Azul (ESCOM)** con los mismos colores del Ejercicio 2 (`#9B023D` / `#003E80`), adaptados automáticamente a modo claro/oscuro.
+- Al primer arranque crea archivos de ejemplo (`.txt`, `.md`, `.json`, `.png`) para probar los visores sin conexión.
+
+### Arquitectura limpia
+
+```
+lib/
+├── core/           # Temas (AppTheme) y utilidades de formato
+├── domain/         # Entidades, contratos de repositorio y casos de uso (Dart puro)
+├── data/           # Implementación con dart:io, path_provider y Hive
+└── presentation/   # Providers (estado), pantallas y widgets
+```
+
+**Archivos principales:** `main.dart`, `app.dart`, `app_theme.dart`, `file_item.dart`, `file_repository.dart`, `file_repository_impl.dart`, `hive_preferences_datasource.dart`, `file_browser_provider.dart`, `settings_provider.dart`, `favorites_provider.dart`, `recents_provider.dart`, `file_browser_screen.dart`, `image_viewer_screen.dart`, `text_viewer_screen.dart`, `destination_picker_screen.dart`, `root_tab_screen.dart`.
+
+### Evidencia
+
+| Pantalla principal (Documents / Inbox / Temporal) | Contenido de Documents (Guinda, claro) |
+|---|---|
+| ![Inicio Flutter](capturas/ejercicio4/01-inicio-guinda.png) | ![Documents Guinda claro](capturas/ejercicio4/02-documents-guinda-claro.png) |
+
+| Visor de imágenes con zoom | Visor/editor de texto |
+|---|---|
+| ![Zoom en imagen](capturas/ejercicio4/16-visor-imagen-zoom.png) | ![Visor de texto](capturas/ejercicio4/04-visor-texto-editado.png) |
+
+| Menú contextual (mantener presionado) | Importar archivo (PDF) |
+|---|---|
+| ![Menú de acciones](capturas/ejercicio4/05-menu-acciones.png) | ![Importar PDF](capturas/ejercicio4/14-importar-pdf.png) |
+
+| Favoritos (persistidos en Hive) | Tema Azul (ESCOM) en modo oscuro |
+|---|---|
+| ![Favoritos](capturas/ejercicio4/07-favoritos.png) | ![Azul oscuro](capturas/ejercicio4/13-documents-azul-oscuro.png) |
+
+Todas las capturas (16) están en [`Ejercicio4_Flutter/README.md`](Ejercicio4_Flutter/README.md).
+
+### Cómo ejecutarlo
+1. Tener instalado Flutter (3.38 o superior) y Android Studio con un emulador de Android.
+2. En una terminal, entrar a `Ejercicio4_Flutter/` y correr `flutter pub get` (solo esta vez se necesita internet, para descargar dependencias).
+3. Abrir el emulador y correr `flutter run`.
+4. (Opcional) `flutter test` para las pruebas unitarias y de widgets.
+
+Instrucciones detalladas (APK, iOS, uso de cada pantalla): ver [`Ejercicio4_Flutter/README.md`](Ejercicio4_Flutter/README.md).
+
+### Notas
+| Situación | Detalle | Solución aplicada |
+|---|---|---|
+| Plugins antiguos con Gradle 9 / AGP 9 | `file_picker 8` y `share_plus 10` no compilaban | Se actualizaron a `file_picker 13` y `share_plus 13` (nuevas APIs) |
+| Carpetas internas de Flutter en Android | En modo debug, `flutter_assets` y `res_timestamp-*` aparecían dentro de Documents | Se ocultan en el listado (no son archivos del usuario) |
+| Pellizco en el emulador | Con el mouse no se puede hacer zoom de dos dedos fácilmente | Se agregaron botones de acercar/alejar al visor (el pellizco sigue funcionando en un dispositivo real) |
+| Compilación para iOS | Requiere Xcode 15 o superior en macOS | Pendiente de compilar en el entorno macOS del Ejercicio 1 |
+
+---
 
 ## Ejercicio 5 — Kotlin Multiplatform
 *(pendiente — completar por el equipo)*
