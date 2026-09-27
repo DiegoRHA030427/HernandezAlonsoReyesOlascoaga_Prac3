@@ -1,0 +1,14 @@
+-- Preferencias de la app (equivalente a SettingsStore/UserDefaults del Ejercicio 3):
+-- tema, modo claro/oscuro y álbum por defecto.
+CREATE TABLE AppSetting (
+    settingKey TEXT NOT NULL PRIMARY KEY,
+    settingValue TEXT NOT NULL
+);
+
+selectAll:
+SELECT *
+FROM AppSetting;
+
+upsert:
+INSERT OR REPLACE INTO AppSetting(settingKey, settingValue)
+VALUES (?, ?);

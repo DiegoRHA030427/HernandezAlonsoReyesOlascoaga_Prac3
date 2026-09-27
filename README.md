@@ -10,7 +10,7 @@ La práctica consta de 5 ejercicios. Este repositorio reúne el trabajo de ambos
 | 2 | Gestor de archivos nativo | iOS (Swift/SwiftUI) | Julio Olascoaga |
 | 3 | Aplicación de cámara y micrófono | iOS (Swift/SwiftUI) | Julio Olascoaga |
 | 4 | Aplicación multiplataforma — Gestor de archivos | Flutter (Android / iOS) | Diego Hernández |
-| 5 | Aplicación multiplataforma | Kotlin Multiplatform | *(en progreso — completar)* |
+| 5 | Aplicación multiplataforma — Cámara y micrófono | Kotlin Multiplatform (Android / iOS) | Diego Hernández |
 
 > Los nombres del equipo en la tabla son un punto de partida — ajusta o completa según corresponda.
 
@@ -23,7 +23,10 @@ La práctica consta de 5 ejercicios. Este repositorio reúne el trabajo de ambos
 ├── Ejercicio2_GestorArchivos/       # Proyecto Xcode — Gestor de Archivos
 ├── Ejercicio3_CamaraMicrofono/      # Proyecto Xcode — Cámara y Micrófono
 ├── Ejercicio4_Flutter/              # Proyecto Flutter
-└── Ejercicio5_KotlinMultiplatform/  # Proyecto Kotlin Multiplatform
+├── Ejercicio5_KotlinMultiplatform/  # Proyecto Kotlin Multiplatform
+├── binarios/                        # APK release de los Ejercicios 4 y 5
+├── capturas/                        # Evidencia de cada ejercicio
+└── Comparativa_Flutter_vs_KMP.md    # Tabla comparativa para el informe (sección 5.5)
 ```
 
 ---
@@ -210,4 +213,72 @@ Instrucciones detalladas (APK, iOS, uso de cada pantalla): ver [`Ejercicio4_Flut
 ---
 
 ## Ejercicio 5 — Kotlin Multiplatform
-*(pendiente — completar por el equipo)*
+
+**Carpeta:** `Ejercicio5_KotlinMultiplatform/` · Kotlin Multiplatform + Compose Multiplatform · SQLDelight (persistencia local)
+
+Versión multiplataforma (Android / iOS) de la app de **Cámara y Micrófono** del Ejercicio 3, con la misma lógica de negocio y las mismas pestañas: **Cámara**, **Audio**, **Galería**, **Ajustes**. Funciona 100 % sin conexión: la app ni siquiera declara el permiso `INTERNET`.
+
+- **Cámara:** vista previa en vivo (CameraX en Android), flash, filtros (Ninguno, Sepia, Blanco y negro, Vívido) y temporizador (3/5/10 s). Antes de guardar se elige el álbum; se registra fecha y, si hay permiso, ubicación.
+- **Audio:** grabación con medidor de nivel, sensibilidad del micrófono y temporizador de grabación (15/30/60 s o sin límite).
+- **Galería:** fotos y audios filtrables por álbum. Fotos: rotar, reaplicar filtro, favorito, álbum/etiquetas, compartir y eliminar. Audios: reproductor con barra de progreso, favorito, compartir y eliminar.
+- **Persistencia con SQLDelight:** tabla `CapturedItem` (mismos campos que la entidad de Core Data del Ejercicio 3) y tabla `AppSetting` (tema, modo claro/oscuro, álbum por defecto). Los archivos se guardan en la carpeta `Capturas` del sandbox de la app.
+- Temas **Guinda (IPN)** y **Azul (ESCOM)** con los mismos colores de los ejercicios anteriores (`#9B023D` / `#003E80`) y modo **Sistema / Claro / Oscuro**.
+
+### Módulos y expect/actual
+
+```
+shared/src/
+├── commonMain/    # Lógica de negocio, repositorios, SQLDelight y toda la interfaz (Compose)
+├── androidMain/   # actual: CameraX, AudioRecord, MediaPlayer, LocationManager, FileProvider…
+├── iosMain/       # actual: UIImagePickerController, AVAudioRecorder, AVAudioPlayer, CLLocationManager…
+└── commonTest/    # Pruebas de la lógica compartida
+androidApp/        # App Android (MainActivity + manifiesto)
+iosApp/            # Proyecto Xcode que usa el framework "Shared"
+```
+
+Todo recurso nativo que cambia entre sistemas se declara con `expect` en `commonMain/.../platform/` y se implementa con `actual` en cada plataforma: base de datos (`DatabaseDriverFactory`), archivos (`FileStorage`), cámara (`rememberCameraController`), filtros (`ImageProcessor`), micrófono (`AudioRecorder`), reproducción (`AudioPlayer`), permisos (`rememberPermissionState`), ubicación (`LocationProvider`), compartir (`ShareHelper`) y botón atrás (`PlatformBackHandler`). La tabla completa está en [`Ejercicio5_KotlinMultiplatform/README.md`](Ejercicio5_KotlinMultiplatform/README.md).
+
+### Evidencia
+
+| Cámara con vista previa en vivo | Guardar foto con filtro Sepia y álbum |
+|---|---|
+| ![Vista previa](capturas/ejercicio5/02-camara-preview.png) | ![Guardar con filtro](capturas/ejercicio5/05-camara-filtro-sepia-album.png) |
+
+| Grabando audio | Galería (fotos y audios) |
+|---|---|
+| ![Grabando](capturas/ejercicio5/07-audio-grabando.png) | ![Galería](capturas/ejercicio5/09-galeria.png) |
+
+| Detalle de foto: rotar y favorito | Reproductor de audio |
+|---|---|
+| ![Rotar y favorito](capturas/ejercicio5/11-foto-rotar-favorito.png) | ![Reproductor](capturas/ejercicio5/13-audio-reproduccion.png) |
+
+| Tema Azul (ESCOM) en modo oscuro | Datos y ajustes persistidos tras reiniciar la app |
+|---|---|
+| ![Azul oscuro](capturas/ejercicio5/16-ajustes-azul-oscuro.png) | ![Persistencia](capturas/ejercicio5/21-persistencia-tras-reinicio.png) |
+
+Todas las capturas (21) están en [`Ejercicio5_KotlinMultiplatform/README.md`](Ejercicio5_KotlinMultiplatform/README.md).
+
+### Cómo ejecutarlo
+1. Tener instalado Android Studio con un emulador de Android.
+2. *File → Open…* y elegir la carpeta `Ejercicio5_KotlinMultiplatform`. Esperar la sincronización de Gradle (solo esta vez se necesita internet, para descargar dependencias).
+3. Elegir la configuración **androidApp** y el emulador, y presionar ▶ **Run**.
+   - Por terminal (PowerShell): `$env:JAVA_HOME = "C:\Program Files\Android\Android Studio\jbr"` y luego `.\gradlew.bat :androidApp:installDebug`.
+4. (Opcional) `.\gradlew.bat :shared:testAndroidHostTest` para las pruebas de la lógica compartida.
+
+Instrucciones detalladas (APK, iOS, uso de cada pestaña): ver [`Ejercicio5_KotlinMultiplatform/README.md`](Ejercicio5_KotlinMultiplatform/README.md).
+
+### Notas
+| Situación | Detalle | Solución aplicada |
+|---|---|---|
+| Guardado cancelado al cambiar de pestaña | Si se guardaba una foto y se cambiaba de pestaña mientras se obtenía la ubicación (hasta 3 s), el guardado se cancelaba junto con la pantalla | Los guardados de fotos y audios se ejecutan en un ámbito de corrutinas de toda la app (`AppContainer.appScope`) |
+| Duración del audio en el emulador | El micrófono virtual del emulador entrega muestras más rápido que el tiempo real (8 s grabados se reproducían como 27 s) | La grabación descarta el excedente según el tiempo real transcurrido; en un teléfono real no recorta nada |
+| Pantalla negra en el emulador | Tras varias reinstalaciones seguidas, el emulador dejó de mostrar la app (la app sí corría) | *Cold Boot* del emulador desde el Device Manager de Android Studio |
+| Ubicación en el emulador | Las fotos quedan "Sin ubicación" porque el GPS simulado no responde dentro del límite de 3 s | En un dispositivo real, o fijando una ubicación en *Extended controls → Location*, sí se guarda |
+| Compilación para iOS | Compose Multiplatform requiere una Mac con Apple Silicon y Xcode 16 o superior; la VM macOS del Ejercicio 1 (Intel, Xcode 14.3.1) no es compatible | El código de `iosMain` y el proyecto `iosApp` quedan listos para compilarse en una Mac compatible |
+
+---
+
+## Binarios y comparación Flutter vs Kotlin Multiplatform
+
+- **APK listos para instalar** (release, funcionan sin internet): [`binarios/Ejercicio4_GestorArchivos_Flutter.apk`](binarios/Ejercicio4_GestorArchivos_Flutter.apk) (53.2 MB) y [`binarios/Ejercicio5_CamaraMicrofono_KMP.apk`](binarios/Ejercicio5_CamaraMicrofono_KMP.apk) (15.1 MB). Para instalarlos en un teléfono Android, copiar el APK y abrirlo (permitir "instalar apps de origen desconocido"), o arrastrarlo al emulador.
+- **Tabla comparativa detallada** entre ambas tecnologías (lenguaje, interfaz, APIs nativas, código compartido, tamaño del binario, curva de aprendizaje, madurez): [`Comparativa_Flutter_vs_KMP.md`](Comparativa_Flutter_vs_KMP.md).

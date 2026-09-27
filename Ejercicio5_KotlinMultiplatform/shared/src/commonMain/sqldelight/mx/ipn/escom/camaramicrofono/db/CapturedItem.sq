@@ -1,0 +1,47 @@
+-- Metadatos de fotos y audios capturados.
+-- Mismos campos que la entidad CapturedItem de Core Data del Ejercicio 3
+-- (CamaraMicrofono.xcdatamodeld). Los booleanos se guardan como INTEGER 0/1
+-- y las fechas como milisegundos desde 1970 (epoch).
+CREATE TABLE CapturedItem (
+    id TEXT NOT NULL PRIMARY KEY,
+    type TEXT NOT NULL,                      -- 'photo' | 'audio'
+    fileName TEXT NOT NULL,
+    dateCreated INTEGER NOT NULL,            -- epoch en milisegundos
+    albumName TEXT NOT NULL DEFAULT 'General',
+    tags TEXT NOT NULL DEFAULT '',
+    isFavorite INTEGER NOT NULL DEFAULT 0,
+    latitude REAL NOT NULL DEFAULT 0,
+    longitude REAL NOT NULL DEFAULT 0,
+    hasLocation INTEGER NOT NULL DEFAULT 0,
+    duration REAL NOT NULL DEFAULT 0         -- segundos (solo audio)
+);
+
+CREATE INDEX CapturedItem_date ON CapturedItem(dateCreated);
+
+selectAll:
+SELECT *
+FROM CapturedItem
+ORDER BY dateCreated DESC;
+
+selectById:
+SELECT *
+FROM CapturedItem
+WHERE id = ?;
+
+insert:
+INSERT INTO CapturedItem(id, type, fileName, dateCreated, albumName, tags, isFavorite, latitude, longitude, hasLocation, duration)
+VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+updateFavorite:
+UPDATE CapturedItem
+SET isFavorite = ?
+WHERE id = ?;
+
+updateAlbumAndTags:
+UPDATE CapturedItem
+SET albumName = ?, tags = ?
+WHERE id = ?;
+
+deleteById:
+DELETE FROM CapturedItem
+WHERE id = ?;

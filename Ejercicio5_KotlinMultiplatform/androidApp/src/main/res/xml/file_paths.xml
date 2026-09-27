@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Carpetas que se pueden compartir con otras apps mediante FileProvider -->
+<paths>
+    <files-path name="capturas" path="Capturas/" />
+    <cache-path name="temporales" path="." />
+</paths>
