@@ -12,7 +12,6 @@ La práctica consta de 5 ejercicios. Este repositorio reúne el trabajo de ambos
 | 4 | Aplicación multiplataforma — Gestor de archivos | Flutter (Android / iOS) | Diego Hernández |
 | 5 | Aplicación multiplataforma — Cámara y micrófono | Kotlin Multiplatform (Android / iOS) | Diego Hernández |
 
-> Los nombres del equipo en la tabla son un punto de partida — ajusta o completa según corresponda.
 
 ## Estructura del repositorio
 
