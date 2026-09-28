@@ -21,9 +21,7 @@ enum PhotoFilter: String, CaseIterable, Identifiable {
 
     func apply(to image: UIImage) -> UIImage {
         guard self != .ninguno, let ciImage = CIImage(image: image) else { return image }
-        // Se fuerza el renderizador por software: en entornos sin aceleración GPU/Metal
-        // (como una VM anidada) el CIContext por GPU falla en silencio y el filtro no se aplica.
-        let context = CIContext(options: [.useSoftwareRenderer: true])
+        let context = CIContext()
         let output: CIImage?
         switch self {
         case .sepia:

@@ -1,0 +1,15 @@
+# Xcode
+**/xcuserdata/
+*.xcuserstate
+**/DerivedData/
+.DS_Store
+*.swiftpm
+
+# Flutter / Android (por si acaso)
+**/.dart_tool/
+**/build/
+*.iml
+.gradle/
+
+# Kotlin/Gradle
+**/.idea/
