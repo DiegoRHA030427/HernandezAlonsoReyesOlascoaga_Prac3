@@ -4,13 +4,13 @@ Proyecto en equipo para la materia de **Desarrollo de Aplicaciones Móviles Nati
 
 La práctica consta de 5 ejercicios. Este repositorio reúne el trabajo de ambos integrantes del equipo:
 
-| Ejercicio | Descripción | Plataforma | Responsable |
-|---|---|---|---|
-| 1 | Instalación y configuración del entorno de desarrollo nativo (iOS) | macOS / Xcode | Julio Olascoaga |
-| 2 | Gestor de archivos nativo | iOS (Swift/SwiftUI) | Julio Olascoaga |
-| 3 | Aplicación de cámara y micrófono | iOS (Swift/SwiftUI) | Julio Olascoaga |
-| 4 | Aplicación multiplataforma — Gestor de archivos | Flutter (Android / iOS) | Diego Hernández |
-| 5 | Aplicación multiplataforma — Cámara y micrófono | Kotlin Multiplatform (Android / iOS) | Diego Hernández |
+| Ejercicio | Descripción | Plataforma |
+|---|---|---|
+| 1 | Instalación y configuración del entorno de desarrollo nativo (iOS) | macOS / Xcode |
+| 2 | Gestor de archivos nativo | iOS (Swift/SwiftUI) |
+| 3 | Aplicación de cámara y micrófono | iOS (Swift/SwiftUI) |
+| 4 | Aplicación multiplataforma — Gestor de archivos | Flutter (Android / iOS) |
+| 5 | Aplicación multiplataforma — Cámara y micrófono | Kotlin Multiplatform (Android / iOS) |
 
 
 ## Estructura del repositorio
